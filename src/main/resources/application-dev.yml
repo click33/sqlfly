@@ -1,0 +1,17 @@
+# 端口
+server:
+    port: 8081
+
+spring: 
+    # sqlfly的配置 
+    sqlfly: 
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/yanzhi_dev?useUnicode=true&characterEncoding=utf-8
+        username: root
+        password: root123456 
+        # 是否启用连接池 
+        ispool: false
+        # 是否控制台打印日志 
+        printSql: true 
+        
+        

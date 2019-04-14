@@ -1,0 +1,16 @@
+spring: 
+    profiles: 
+        # 启动环境加载 
+        active: dev
+        #active: test
+
+# ================ 公共配置(优先级低于application-xxx.yml)  ================ 
+    
+          
+server: 
+    tomcat: 
+        uri-encoding: UTF-8
+        
+        
+        
+        
