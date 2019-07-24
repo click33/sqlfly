@@ -29,10 +29,4 @@ public class SqlFlyApplication {
 
 	
 	
-//	SqlFlyFactory.getFly().begin(() -> {
-//
-//	});
-	
-	
-	
 }

@@ -23,7 +23,7 @@ public class CodeCfg {
 	public String docPath = "doc/"; // 文档生成路径 
 	
 	public String author = ""; // 生成的代码作者名字
-	public String package_ajaxjson = "com.pj.utils"; // AjaxJson类的地址，在代码生成时会用到
+	public String package_ajaxjson = "com.fly.jdbc.util"; // AjaxJson类的地址，在代码生成时会用到
 	public String class_ajaxjson = "AjaxJson"; // AjaxJson类的名字
 	public int fieldType = 1; // 对数据库表字段的处理方式（1=转小写，2=转大写，0=不变）
 
