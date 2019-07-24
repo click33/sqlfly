@@ -71,7 +71,7 @@ public class ReadUtil {
 	}
 	
 	
-	// 返回指定表的全部字段JDBC建议类型
+	// 返回指定表的全部字段JDBC建议类型 
 	public static Map<String, String> getJtMap(SqlFly sqlFly, String tableName) {
 		Map<String, String> map = new HashMap<>();
 		try {
@@ -94,7 +94,7 @@ public class ReadUtil {
 		if (cType.equals("java.lang.Integer")) {
 			return "int";
 		} else if (cType.equals("java.sql.Timestamp") || cType.equals("java.sql.Date")) {
-			return "Timestamp";
+			return "Date";
 		} else if (cType.equals("java.sql.Double")) {
 			return "double";
 		} else if (cType.equals("java.sql.Long")) {

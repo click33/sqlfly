@@ -6,9 +6,11 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import com.fly.jdbc.cfg.FlyRun;
+import com.fly.jdbc.cfg.FlyObjects;
 import com.fly.jdbc.exception.FlySQLException;
-import com.fly.util.Page;
+import com.fly.jdbc.paging.Page;
+import com.fly.jdbc.util.FlyDbUtil;
+import com.fly.jdbc.util.FlyLambdaCode;
 
 /**
  * Fly核心对象，JDBC的封装
@@ -97,7 +99,7 @@ public class SqlFly extends SqlFlyBase {
 
 	/**
 	 * <h1>将结果集映射为指定Model集合</h1>
-	 * <h1>支持基本数据类型，如：Integer、Double等</h1> 参数：映射类型，sql语句，参数列表<br/>
+	 * <h1>支持基本数据类型，如：Integer、Double等</h1> 参数：sql语句，映射类型，参数列表<br/>
 	 * <br/>
 	 */
 	public <T> List<T> getList(Class<T> cs, String sql, Object... args) {
@@ -114,7 +116,14 @@ public class SqlFly extends SqlFlyBase {
 	 * 根据分页获取集合
 	 */
 	public <T> List<T> getListPage(Page page, Class<T> cs, String sql, Object... args) {
-		return FlyRun.flyPaging.getListPage(this, page, cs, sql, args);
+		if(page == null) {
+			page = new Page(1, FlyObjects.getConfig().defaultLimit);
+		}
+		if(page.getIs_count()) {
+			page.setCount(getCount(sql, args));
+		}
+		sql = FlyObjects.getPaging().getPagingSql(sql, page);
+		return getList(cs, sql, args);
 	}
 
 	
@@ -148,7 +157,14 @@ public class SqlFly extends SqlFlyBase {
 
 	/** 将结果集映射为--List< Map >集合 - 并分页 */
 	public List<Map<String, Object>> getMapListPage(Page page, String sql, Object... args) {
-		return FlyRun.flyPaging.getMapListPage(this, page, sql, args);
+		if(page == null) {
+			page = new Page(1, FlyObjects.getConfig().defaultLimit);
+		}
+		if(page.getIs_count()) {
+			page.setCount(getCount(sql, args));
+		}
+		sql = FlyObjects.getPaging().getPagingSql(sql, page);
+		return getMapList(sql, args);
 	}
 
 	
@@ -182,14 +198,15 @@ public class SqlFly extends SqlFlyBase {
 	 * @return
 	 */
 	public int getCount(String sql, Object... args) {
-		return getScalarInt("select count(*) from (" + sql + ") as T", args);
+		return getScalarInt("select count(*) from (" + sql + ") as tab_x", args);
 	}
 
 	/**
 	 * 聚合查询，返回第一行第一列值，并将其强转成为Integer
 	 */
 	public Integer getScalarInt(String sql, Object... args) {
-		return Integer.parseInt(getScalar(sql, args).toString());
+		Object obj = getScalar(sql, args);
+		return obj == null ? null : Integer.parseInt(obj.toString());
 	}
 
 	/**
@@ -203,14 +220,16 @@ public class SqlFly extends SqlFlyBase {
 		}
 	}
 
-	// 可执行类
-	public <T> List<T> getListPage(Page page, Class<T> cs, SqlExe sqlExe) {
-		return getListPage(page, cs, sqlExe.getSql(), sqlExe.getArgs().toArray());
+	// SQL构建类 
+	public <T> List<T> getListPage(Page page, Class<T> cs, SAP sap) {
+		return getListPage(page, cs, sap.sql, sap.args.toArray());
 	}
-	public List<Map<String, Object>> getMapListPage(Page page, SqlExe sqlExe) {
-		return getMapListPage(page, sqlExe.getSql(), sqlExe.getArgs().toArray());
+	public List<Map<String, Object>> getMapListPage(Page page, SAP sap) {
+		return getMapListPage(page, sap.sql, sap.args.toArray());
 	}
 
+	
+	
 	
 	
 	
@@ -221,7 +240,21 @@ public class SqlFly extends SqlFlyBase {
 		return this;
 	}
 	
-	
+	/**
+	 * 已lambda方式开始事务
+	 * @param code lambda表达式
+	 * @return 
+	 */
+	public SqlFly begin(FlyLambdaCode code) {
+		try {
+			beginTransaction();
+			code.run();
+			commit();
+		} catch (Exception e) {
+			rollback();
+		}
+		return this;
+	}
 	
 	
 	

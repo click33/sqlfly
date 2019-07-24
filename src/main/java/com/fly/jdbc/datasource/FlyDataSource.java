@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
-import com.fly.jdbc.cfg.FlyRun;
 import com.fly.jdbc.exception.FlySQLException;
 import com.fly.jdbc.exception.FlySysException;
 
@@ -20,22 +19,39 @@ import com.fly.jdbc.exception.FlySysException;
  */
 public class FlyDataSource implements DataSource {
 
-	public String driverClassName = FlyRun.flyCfg.driverClassName;
-	public String url = FlyRun.flyCfg.url;
-	public String username = FlyRun.flyCfg.username;
-	public String password = FlyRun.flyCfg.password;
+	private String driverClassName;
+	private String url;
+	private String username;
+	private String password;
 
-	public boolean ispool = FlyRun.flyCfg.ispool; // 是否使用连接池，其值若为false，则代表不再使用连接池
-	public int init = FlyRun.flyCfg.init; // 初始化连接数
-	public int min = FlyRun.flyCfg.min; // 最小链接数
-	public int max = FlyRun.flyCfg.max; // 最大连接数
+	private boolean ispool;
+	private int init;
+	private int min;
+	private int max;
 
-	
 	public FlyDataSource() {
+	}
+
+	public FlyDataSource(String driverClassName, String url, String username, String password, boolean ispool, int init,
+			int min, int max) {
+		super();
+		this.driverClassName = driverClassName;
+		this.url = url;
+		this.username = username;
+		this.password = password;
+		this.ispool = ispool;
+		this.init = init;
+		this.min = min;
+		this.max = max;
+		this.loadDriver();
+	}
+
+	// 加载驱动
+	private void loadDriver() {
 		try {
 			Class.forName(driverClassName);
 		} catch (ClassNotFoundException e) {
-			throw new FlySysException("驱动加载异常：" + driverClassName, e);
+			throw new FlySysException("数据库驱动加载异常：" + driverClassName, e);
 		}
 	}
 
@@ -158,6 +174,71 @@ public class FlyDataSource implements DataSource {
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	// 配置属性的 get && set
+	public String getDriverClassName() {
+		return driverClassName;
+	}
+
+	public void setDriverClassName(String driverClassName) {
+		this.driverClassName = driverClassName;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public boolean isIspool() {
+		return ispool;
+	}
+
+	public void setIspool(boolean ispool) {
+		this.ispool = ispool;
+	}
+
+	public int getInit() {
+		return init;
+	}
+
+	public void setInit(int init) {
+		this.init = init;
+	}
+
+	public int getMin() {
+		return min;
+	}
+
+	public void setMin(int min) {
+		this.min = min;
+	}
+
+	public int getMax() {
+		return max;
+	}
+
+	public void setMax(int max) {
+		this.max = max;
 	}
 
 }

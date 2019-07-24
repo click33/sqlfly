@@ -1,8 +1,8 @@
 package com.fly.jdbc.cfg;
 
 /**
- * 初始化加载FlyRun
- * @author kongyongshun
+ * SqlFly在加载过程中的切面事件 
+ * @author kong
  *
  */
 public interface FlyLoad {

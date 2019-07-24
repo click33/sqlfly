@@ -5,13 +5,13 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import com.fly.jdbc.cfg.FlyRun;
+import com.fly.jdbc.cfg.FlyObjects;
 import com.fly.jdbc.exception.FlySQLException;
 
 /**
  * SqlFly的依赖治理
  * 
- * @author kongyongshun
+ * @author kong
  *
  */
 public class SqlFlyBase {
@@ -31,7 +31,7 @@ public class SqlFlyBase {
 	 */
 	public DataSource getDataSource() {
 		if (this.dataSource == null) {
-			this.dataSource = FlyRun.getDataSource();
+			this.dataSource = FlyObjects.getDataSource();
 		}
 		return dataSource;
 	}

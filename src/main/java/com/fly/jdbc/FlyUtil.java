@@ -1,16 +1,18 @@
 package com.fly.jdbc;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import com.fly.util.Page;
+import com.fly.jdbc.cfg.FlyConsts;
+
 
 /**
  * Fly,让代码飞起来
  * <p>作为工具类，Fly提供了SqlFly操作中一些常用的函数，虽然这些函数功能简单，但它们的确可以使你的代码更加优雅 
  */
-public class Fly {
+public class FlyUtil {
 	
 	
 	
@@ -82,17 +84,6 @@ public class Fly {
 		return newArray;
 	}
 	
-	/**
-	 * 动态sql辅助方法[追加sql,参数集合,要追加的参数...]返回追加sql
-	 * <p>对于动态Sql，牵扯到数组扩容问题，这种扩容对内存开销较大，
-	 * <p>所以：Fly建议的做法是先声明参数集合，最后再调用args.toArray()转回数组
-	 */
-	public static String sqlAppend(String sqlAppend,List<Object>args,Object...arg) {
-		for (Object obj : arg) {
-			args.add(obj);
-		}
-		return sqlAppend;
-	}
 	
 	
 	
@@ -114,23 +105,23 @@ public class Fly {
 	
 	
 	/** 返回分页后的集合，内存分页 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static List getListPage(List list, Page page) {
-		List newList = new ArrayList();
-		if (page == null) {
-			return newList;
-		}
-		int start = page.getStart(); // 开始数
-		int pz = page.getPageSize(); // 页大小
-		page.setCount(list.size());
-		for (int i = start; i < start + pz; i++) {
-			if (i >= list.size()) {
-				break;
-			}
-			newList.add(list.get(i));
-		}
-		return newList;
-	}
+//	@SuppressWarnings({ "rawtypes", "unchecked" })
+//	public static List getListPage(List list, Page page) {
+//		List newList = new ArrayList();
+//		if (page == null) {
+//			return newList;
+//		}
+//		int start = page.getStart(); // 开始数
+//		int pz = page.getPageSize(); // 页大小
+//		page.setCount(list.size());
+//		for (int i = start; i < start + pz; i++) {
+//			if (i >= list.size()) {
+//				break;
+//			}
+//			newList.add(list.get(i));
+//		}
+//		return newList;
+//	}
 	
 	
 	/**
@@ -157,27 +148,34 @@ public class Fly {
 	}
 	
 	
-	/** 将int[]转换为Object[] */
-	public static Object[] arrayIntToObj(int[] args) {
-		Object[] shu = new Object[args.length];
-		for (int i = 0; i < args.length; i++) {
-			shu[i] = args[i];
-		}
-		return shu;
+	
+	
+	
+	
+	// 打印 SqlFly
+	@SuppressWarnings("unused")
+	public static void printSqlFly() {
+		String a = "" + 
+				"   _____           _   ______   _         \n" + 
+				"  / ____|         | | |  ____| | |        \n" + 
+				" | (___     __ _  | | | |__    | |  _   _ \n" + 
+				"  \\___ \\   / _` | | | |  __|   | | | | | |\n" + 
+				"  ____) | | (_| | | | | |      | | | |_| |\n" + 
+				" |_____/   \\__, | |_| |_|      |_|  \\__, |\n" + 
+				"              | |                    __/ |\n" + 
+				"              |_|                   |___/ \n" + 
+				" SqlFly     " + FlyConsts.V + "         ";
+		String b = "____ ____ _    ____ _    _   _ \n" + 
+				"[__  |  | |    |___ |     \\_/  \n" + 
+				"___] |_\\| |___ |    |___   |   \n" + 
+				"SqlFly     " + FlyConsts.V + "         \n";
+		String str = b;
+		System.out.println(str);
 	}
 	
-	/** 返回一个类型父类(或接口)中泛型所代表的类型 */
-	static Class<?> getAbsT  (Class<?> clz) {
-		Type type=clz.getGenericSuperclass();	//获得类型
-		if(!(type instanceof ParameterizedType)){  
-			return Object.class;  
-		}
-		Type[] params = ((ParameterizedType)type).getActualTypeArguments();
-		if(!(params[0] instanceof Class)) {  
-			return Object.class;  
-		}  
-		return (Class<?>) params[0];
-	} 
+	
+	
+	
 	
 }
 

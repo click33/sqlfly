@@ -1,4 +1,4 @@
-package com.fly.util;
+package com.fly.jdbc.paging;
 
 import java.io.Serializable;
 
@@ -10,14 +10,16 @@ public class Page implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	
-	int pageNo = 1;     // 当前页
-    int pageSize = 10;   // 页大小
-    int start;      // 起始位置
-    int count;      // 总数据数
-    int pageCount;  // 可以分的总页数
+	int pageNo = 1;     // 当前页 
+    int pageSize = 10;   // 页大小 
+    int start;      // 起始位置 
+    int count = -1;      // 总数据数 
+    int pageCount;  // 可以分的总页数 
+    boolean is_count = true;  // 是否加载总数, 不加载总数的情况下可以减少一次数据库请求 
 
 
-    public Page(){}
+
+	public Page(){}
     
     /**
      * 当前页、页大小
@@ -54,6 +56,7 @@ public class Page implements Serializable{
                 ", start=" + start +
                 ", count=" + count +
                 ", pageCount=" + getPageCount() +
+                ", is_count=" + is_count +
                 '}';
     }
 
@@ -85,12 +88,12 @@ public class Page implements Serializable{
     public int getStart() {
         return start;
     }
-
     public Page setStart(int start) {
         this.start = start;
         return this;
     }
 
+    // 数据总数 
     /**
      * 根据总条数，计算总页数
      */
@@ -99,13 +102,24 @@ public class Page implements Serializable{
         return (pageCount = count % pageSize == 0 ?  pc : pc + 1);
     }
 
+    // 数据总数 
     public int getCount() {
         return count;
     }
-
-    public Page setCount(int dataCount) {
-        this.count = dataCount;
+    public Page setCount(int count) {
+        this.count = count;
         return this;
     }
 
+    // 是否加载数据总数 
+    public Boolean getIs_count() {
+		return is_count;
+	}
+	public Page setIs_count(Boolean is_count) {
+		this.is_count = is_count;
+		return this;
+	}
+	
+	
+	
 }

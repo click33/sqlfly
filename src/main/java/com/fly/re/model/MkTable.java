@@ -10,7 +10,7 @@ import com.fly.re.out.OutUtil;
  * @author kongyongshun
  *
  */
-public class Table {
+public class MkTable {
 
 	
 	public String name = "";			// 表名字
@@ -31,32 +31,46 @@ public class Table {
 		}
 		return sList;
 	}
-	/**
-	 * 返回列的so形式
-	 */
-	public List<Column> getColumnListSO(){
-		List<Column> sList = new ArrayList<>();
-		sList.add(new Column("pageNo", "当前页", "", "int"));
-		sList.add(new Column("pageSize", "页大小", "", "int"));
-		sList.addAll(columnList);
-		return sList;
-	}
+	
 	
 
 	/**
 	 * @param name the name to set
 	 */
-	public Table setName(String name) {
+	public MkTable setName(String name) {
 		this.name = name;
 		return this;
 	}
 	
-	/**
-	 * 返回表名转类名(下划线转大写字母)
-	 */
+	// 返回表名，小写形式
+	public String getNameSmall() {
+		return name.toLowerCase();
+	}
+	
+	// 返回表名转类名(下划线转大写字母)
 	public String getClassName(){
 		return OutUtil.wordEachBig(name);
 	}
+	
+	// 返回Dao名
+	public String getDaoName() {
+		return getClassName() + "Dao"; 
+	}
+	// 返回Service名
+	public String getServiceName() {
+		return getClassName() + "Service"; 
+	}
+//	// 返回Dao名 变量形式 
+//	public String getDaoName() {
+//		return getClassName() + "Dao"; 
+//	}
+//	// 返回Service名 变量形式 
+//	public String getServiceName() {
+//		return getClassName() + "Service"; 
+//	}
+//	
+	
+	
 	
 
 	/* (non-Javadoc)

@@ -4,11 +4,12 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-import com.fly.jdbc.cfg.FlyRun;
+import com.fly.jdbc.cfg.FlyObjects;
 import com.fly.jdbc.exception.FlySQLException;
 
 /**
  * FlyAop的默认实现
+ * 
  * @author kongyongshun
  *
  */
@@ -16,17 +17,18 @@ public class FlyAopDefault implements FlyAop {
 
 	@Override
 	public void exeBefore(String sql, Object[] args) {
-		if(FlyRun.flyCfg.printSql){
-			System.err.print(FlyRun.flyCfg.sqlhh);
-			System.err.println(sql);
-			System.err.print(FlyRun.flyCfg.argshh);
-			System.err.println(Arrays.asList(args));
+		if (FlyObjects.getConfig().printSql) {
+			System.out.println("========== sql execut ==========");
+			System.out.print(FlyObjects.getConfig().sqlhh);
+			System.out.println(sql);
+			System.out.print(FlyObjects.getConfig().argshh);
+			System.out.println(Arrays.asList(args));
 		}
 	}
 
 	@Override
 	public void exeAfter(String sql, Object[] args, PreparedStatement preparedStatement) {
-		
+
 	}
 
 	@Override
@@ -34,13 +36,9 @@ public class FlyAopDefault implements FlyAop {
 		throw new FlySQLException("sql执行异常：" + sql, e);
 	}
 
-	
 	@Override
 	public void exeFinally(String sql, Object[] args, PreparedStatement preparedStatement) {
-		
+
 	}
 
-	
-	
-	
 }

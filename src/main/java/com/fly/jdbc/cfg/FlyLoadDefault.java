@@ -2,7 +2,7 @@ package com.fly.jdbc.cfg;
 
 /**
  * 初始化加载FlyRun默认实现
- * @author kongyongshun
+ * @author kong
  *
  */
 public class FlyLoadDefault implements FlyLoad {

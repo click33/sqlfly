@@ -24,7 +24,7 @@ public @interface AtFly {
 	
 	
 	/* * * * * * * * * * * * * 与表的关系 * * * * * * * * * * * * * * * * * * * * */
-	/**
+//	/**
 //	 * 标注此类哪个字段是主键，默认id
 //	 */
 //	public String pk()default "id";

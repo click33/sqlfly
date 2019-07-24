@@ -1,7 +1,9 @@
-package com.fly.util;
+package com.pj.utils;
 
 import java.io.Serializable;
 import java.util.List;
+
+import com.fly.jdbc.paging.Page;
 
 
 /**
@@ -10,8 +12,13 @@ import java.util.List;
 public class AjaxJson implements Serializable{
 
 	private static final long serialVersionUID = 1L;	// 序列化版本号
+	
 	public static final int CODE_SUCCESS = 200;			// 成功状态码
-	public static final int CODE_ERROR = 500;			// 失败状态码
+	public static final int CODE_ERROR = 500;			// 错误状态码
+	public static final int CODE_WARNING = 501;			// 警告状态码
+	public static final int CODE_NOT_JUR = 998;			// 无权限状态码
+	public static final int CODE_NOT_LOGIN = 999;			// 未登录状态码
+	
 	
 	public int code; 	// 状态码
 	public String msg; 	// 描述信息
@@ -78,6 +85,10 @@ public class AjaxJson implements Serializable{
 	// 返回失败
 	public static AjaxJson getError(String msg) {
 		return new AjaxJson(CODE_ERROR, msg, null, null);
+	}
+	// 返回警告 
+	public static AjaxJson getWarning(String msg) {
+		return new AjaxJson(CODE_WARNING, msg, null, null);
 	}
 	
 	// 返回一个自定义状态码的

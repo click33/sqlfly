@@ -5,14 +5,14 @@ package com.fly.jdbc;
  * @author kongyongshun
  *
  */
-public class FlyFactory {
+public class SqlFlyFactory {
 
 	private static ThreadLocal<SqlFly> SFTL = new ThreadLocal<SqlFly>();
 
 	/**
 	 * 返回当前线程所绑定的SqlFly对象
 	 */
-	public static SqlFly getFly() {
+	public static SqlFly getSqlFly() {
 		if (SFTL.get() == null) {
 			SFTL.set(new SqlFly());
 		}
@@ -20,15 +20,6 @@ public class FlyFactory {
 	}
 	
 
-	
-	// 返回一个SqlExe
-	public static SqlExe getSqlExe(){
-		return new SqlExe();
-	}
-	public static SqlExe getSqlExe(String sql, Object... args){
-		return new SqlExe().appendAll(sql, args);
-	}
-	
 	
 	
 }

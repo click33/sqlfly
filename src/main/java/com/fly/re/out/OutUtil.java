@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
 
+import com.fly.re.model.Column;
+
 /**
  * String处理工具包
  * @author kongyongshun
@@ -13,43 +15,42 @@ public class OutUtil {
 
 
 	// 防止 一次有变，到处乱改
-	static String path_fly_jdbc = "com.fly.jdbc";
+	//static String path_fly_jdbc = "com.fly.jdbc";
 
-	static String fly = "Fly";
-	static String fly_run = "FlyRun";
-	static String fly_code = "FlyCode";
-	static String sql_fly = "SqlFly";
-	static String fly_factory = "FlyFactory";
-	
-	
-	static String path_fly_util = "com.fly.util";
-	static String ajax_json = "AjaxJson";
-	
-	
-	// 输出指定字符串
-	static void print(String str){
-		System.out.print(str);
-	}
+//	static String fly = "Fly";
+//	static String fly_run = "FlyRun";
+//	static String fly_code = "FlyCode";
+//	static String sql_fly = "SqlFly";
+//	static String fly_factory = "FlyFactory";
+//	
+//	static String path_fly_util = "com.fly.util";
 	
 
-	// 指定地址，写入指定内容
-	static void outFile(String filePath, String txt){
-		File file = new File(filePath);
-		File fileDir = new File(file.getParent());
-		if(fileDir.exists() == false){
-			new File(file.getParent()).mkdirs();
-		}
-		try {
-			file.createNewFile();
-			Writer fw = new FileWriter(file.getAbsolutePath());
-			fw.write(txt);
-			fw.flush();
-			fw.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	static String package_fly = "com.fly.jdbc";				// 框架 总包地址
+	static String package_Page = package_fly + ".pageing";	// Page 包地址   
+	static String package_AjaxJson = "com.pj.utils";		// AjaxJson 包地址   
 	
+	static String class_SqlFly = "SqlFly";			// SqlFly 类名 
+	static String class_SqlFlyFactory = "SqlFlyFactory";		// SqlFlyFactory 类名 
+	static String class_FlyUtil = "FlyUtil";		//FlyUtil 类名
+	static String class_Page = "Page";				//Page 类名
+	static String class_SAP = "SAP";				//SAP 类名 
+	static String class_AjaxJson = "AjaxJson";		// AjaxJson 类名 
+
+	static String import_sqlfly = "import " + package_fly + ".*;";	// sqlfly 本尊导入  
+	static String import_Page = "import " + package_Page + "." + class_Page + ";";	// Page 导入  
+	
+	
+	static String method_add = "add";		// 函数名 增
+	static String method_delete = "delete";		// 函数名 删
+	static String method_update = "update";		// 函数名 改
+	static String method_getById = "getById";		// 函数名 查 
+	static String method_getList = "getList";		// 函数名 查 - 集合 
+	
+	
+	
+	
+	// =====================  工具型方法  =========================   
 	
 	// 将指定单词首字母大写;
 	static String wordFirstBig(String str) {
@@ -90,9 +91,14 @@ public class OutUtil {
 		return str;
 	}
 	
+	// 快速组织普通方法注释
+	static String getNotes(String str) {
+		return "\t// " + str + " \r\n";
+	}
+	
 	// 快速组织文档注释,三行,一缩进
 	static String getDoc(String str) {
-		return "\t/**\r\n\t * " + str + "\r\n\t */\r\n";
+		return "\t/**\r\n\t * " + str + " \r\n\t */\r\n";
 	}
 	
 	// 指定字符串的getter形式
@@ -119,6 +125,104 @@ public class OutUtil {
 		return newStr;
 	}
 	
+	// 获取字符串，true返回第一个，false返回第2个  
+	public static String getString(boolean bo, String s1, String s2) {
+		return bo ? s1 : s2;
+	}
+	
+	// 获取toString的doc
+	public static String get_doc_toString() {
+		return "\r\n\t/* (non-Javadoc)\r\n\t * @see java.lang.Object#toString()\r\n\t */\r\n\t@Override\r\n";
+	}
+	
+	// 获取指定字段的 gettet 方法 
+	// 字段名、注释 
+	public static String get_getMethod(Column column) {
+		String getMethod = OutUtil.getDoc("@return " + column.comment);
+		getMethod += "\tpublic " + column.javaType + " get" + OutUtil.getSetGet(column.name) + 
+				"(){\r\n\t\treturn " + column.name + ";\r\n\t}";
+		return getMethod;
+	}
+	
+	// 获取指定字段的 settet 方法 
+	// 字段名、注释 
+	public static String get_setMethod(Column column, String class_name) {
+		String setMethod = OutUtil.getDoc("@param " + column.name + " " + column.comment);
+		setMethod += "\tpublic " + class_name + " set" + OutUtil.getSetGet(column.name) + 
+				"(" + column.javaType + " " + column.name + ") {\r\n\t\tthis." + column.name + 
+				" = " + column.name + ";\r\n\t\treturn this;\r\n\t}";
+		return setMethod;
+	}
+	
+	// 获取SO的getPage方法代码
+	public static String get_getPage() {
+		String str = 
+				"\tpublic Page getPage() {\r\n" + 
+				"\t\tif(this.page == null){\r\n" + 
+				"\t\t\tthis.page = Page.getPage(this.pageNo, this.pageSize);\r\n" + 
+				"\t\t}\r\n" + 
+				"\t\treturn this.page;\r\n" + 
+				"\t}";
+		return str;
+	}
+
+	// 获取SO的getSortString方法代码
+	public static String get_getSortString() {
+		String str = "\tpublic String getSortString(){\r\n" + 
+				"\t\treturn \" order by \" + arr[this.sort_type];\r\n" + 
+				"\t}\r\n";
+		return str;
+	}
+	
+	// 获取getSqlFly()的代码
+	public static String get_getSqlFly() {
+		String getfly = "\t// 底层SqlFly对象\r\n\tprivate " + OutUtil.class_SqlFly 
+				+ " getSqlFly() {\r\n\t\treturn " + OutUtil.class_SqlFlyFactory 
+				+ ".getSqlFly();\r\n\t}\r\n\r\n";
+		return getfly;
+	}
+	
+	
+	// =====================  代码doc相关 markdown  =========================   
+	public static String fzDoc(String title, String api, String args_str, String return_str) {
+		String str = "--- \r\n";
+		str += "### " + title + "\r\n";
+		str += "- 接口 \r\n```\r\n\t" + api + "\r\n```\r\n";
+		str += "- 参数\r\n```\r\n" + args_str + "```\r\n";
+		str += "- 返回\r\n```\r\n" + return_str + "```\r\n";
+		str += "\r\n\r\n";
+		return str;
+	}
+	
+	
+	
+	
+	
+	
+	// =====================  业务方法  =========================   
+
+	// 输出指定字符串
+	static void print(String str){
+		System.out.print(str);
+	}
+	
+	// 指定地址，写入指定内容
+	static void outFile(String filePath, String txt){
+		File file = new File(filePath);
+		File fileDir = new File(file.getParent());
+		if(fileDir.exists() == false){
+			new File(file.getParent()).mkdirs();
+		}
+		try {
+			file.createNewFile();
+			Writer fw = new FileWriter(file.getAbsolutePath());
+			fw.write(txt);
+			fw.flush();
+			fw.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	// 指定包的Spring工厂类
 	public static String SpringBeanFC(String projectPath, String packagePath, String fcName){
@@ -153,6 +257,27 @@ public class OutUtil {
 		
 		return fc;
 	}
+	
+	// 生成 FC指定一个类型的代码注入体 
+	public static String getFCone(String className, String comment) {
+		String varName = wordFirstSmall(className);
+		String str = 
+				"\t/** " + comment + " */\r\n" + 
+				"\tpublic static " + className + " " + varName + ";\r\n" + 
+				"\t@Autowired\r\n" + 
+				"\tpublic void set" + className + "(" + className + " " + varName + ") {\r\n" + 
+				"\t\tFC." + varName + " = " + varName + ";\r\n" + 
+				"\t}\r\n";
+		return str;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }

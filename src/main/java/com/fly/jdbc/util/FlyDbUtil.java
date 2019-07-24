@@ -1,5 +1,6 @@
-package com.fly.jdbc;
+package com.fly.jdbc.util;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,17 +11,19 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import com.fly.jdbc.cfg.FlyRun;
+import com.fly.jdbc.SAP;
+import com.fly.jdbc.cfg.FlyObjects;
 import com.fly.jdbc.exception.FlySQLException;
 import com.fly.jdbc.exception.FlySysException;
 import com.fly.jdbc.mapping.AtFlyClass;
 import com.fly.jdbc.mapping.AtFlyField;
 import com.fly.jdbc.mapping.AtFlyReadUtil;
 
-
 /**
- * Fly对数据库访问的最底层类
+ * SqlFly对数据库访问的最底层类
  * <p>
  * 你不需要调用此类的API，因为SqlFly类对此类进行了更完美的封装
  */
@@ -39,9 +42,8 @@ public class FlyDbUtil {
 			throw new FlySQLException("释放ResultSet或其Statement失败", e);
 		}
 	}
-
+	
 	/* * * * * * * * * * * * * 基本交互 * * * * * * * * * * * * * * * * * * * * */
-
 	/**
 	 * 执行任意类型sql，args为参数列表(其余函数同理)
 	 * @param connection 连接
@@ -50,28 +52,48 @@ public class FlyDbUtil {
 	 * @return 返回sql执行后的PreparedStatement对象
 	 * @throws SQLException
 	 */
+	@SuppressWarnings("unchecked")
 	public static PreparedStatement getExecute(Connection connection, String sql, Object... args){
-		PreparedStatement pst = null;
-		try {
-			FlyRun.flyAop.exeBefore(sql, args);
-			pst = connection.prepareStatement(sql);
-			if (args != null) {
-				for (int i = 0; i < args.length; i++) {
-					pst.setObject(i + 1, args[i]);
+		
+		// 如果是#{参数}模式
+		if(sql.contains("#")) {
+			SAP sap = refSql(sql, args[0], (args.length > 1 ? (Map<String, Object>)args[1] : null));
+			sql = sap.sql;
+			args = sap.args.toArray();
+		} else if(sql.contains("?")) {	// 如果是?模式
+			// 如果调用者粗心的将第一个参数填装成了Array或List
+			if(args.length == 1) {
+				if(args[0].getClass().isArray()) {
+					args = (Object[])args[0];
+				} else if(args[0] instanceof List) {
+					args = ((List<Object>)args[0]).toArray();
 				}
 			}
+		} else {
+			// 既不是#{参数}，也不是? 	
+			args = new Object[]{};
+		}
+		
+		PreparedStatement pst = null;
+		try {
+			FlyObjects.getAop().exeBefore(sql, args);
+			pst = connection.prepareStatement(sql);
+			for (int i = 0; i < args.length; i++) {
+				pst.setObject(i + 1, args[i]);
+			}
 			pst.execute();
-			FlyRun.flyAop.exeAfter(sql, args, pst);
+			FlyObjects.getAop().exeAfter(sql, args, pst);
 			return pst;
 		} catch (SQLException e) {
-			FlyRun.flyAop.exeException(sql, args, e);
+			FlyObjects.getAop().exeException(sql, args, e);
 			return pst;
 		}finally {
-			FlyRun.flyAop.exeFinally(sql, args, pst);
+			FlyObjects.getAop().exeFinally(sql, args, pst);
 		}
 	}
-
 	
+	
+
 	/* * * * * * * * * * * * * 结果集映射为Map * * * * * * * * * * * * * * * * * * * * */
 	
 	/** 将结果集映射为 -- Map 集合 */
@@ -104,7 +126,7 @@ public class FlyDbUtil {
 		}
 		return list;
 	}
-/**
+	/**
 	 * 将结果集映射为--List< Map >集合,指定列的数据作key
 	 * @param rs 结果集
 	 * @param keyCol 被当作key的列
@@ -224,9 +246,12 @@ public class FlyDbUtil {
 			} else if (cs.equals(java.sql.Timestamp.class) || cs.equals(java.util.Date.class)) {
 				value = rs.getTimestamp(key);
 			} else if (cs.equals(java.sql.Date.class)) {
-				value = new java.sql.Date(rs.getTimestamp(key).getTime());
+				java.sql.Timestamp date = rs.getTimestamp(key);
+				if(date != null){
+					value = new java.sql.Date(date.getTime());
+				}
 			} else {
-				value = rs.getObject(key); // 都不匹配，给推荐的吧
+				value = rs.getObject(key); // 都不匹配，走推荐路线
 			}
 			return (T)value;
 		} catch (SQLException e) {
@@ -280,9 +305,36 @@ public class FlyDbUtil {
 	
 	
 	
-	
-	
-	
 
-
+	
+	// 参数刷新 
+	// 进行 #{参数}模式到 ?模式的转换 
+	private static SAP refSql(String sql, Object model, Map<String, Object> paramMap){
+		SAP sap = new SAP();
+		Matcher m = Pattern.compile("\\#\\{.+?\\}").matcher(sql);	// 拼接#号 
+		while (m.find()) {
+	        String param = m.group();
+	        String paramName = param.substring(param.indexOf("{") + 1, param.indexOf("}")).trim();
+	        Object value = null;
+			try {
+				Field field = model.getClass().getDeclaredField(paramName);
+				field.setAccessible(true);
+				value = field.get(model);
+			} catch (NoSuchFieldException e) {
+				// 从model中找不到这个属性时，尝试从Map中读取 
+				if(paramMap != null && paramMap.containsKey(paramName)) {
+					value = paramMap.get(paramName);
+				} else {
+					throw new FlySQLException("未能从给定的参数列表中读取到属性值：" + paramName, e);
+				}
+			} catch (IllegalArgumentException | IllegalAccessException | SecurityException e) {
+				throw new FlySQLException("未能从给定的参数列表中读取到属性值：" + paramName, e);
+			}
+	        sap.args.add(value);
+	    }
+		sap.sql = m.replaceAll("?");	// 替换为jdbc可以识别的sql 
+		return sap;
+	}
+	
+	
 }

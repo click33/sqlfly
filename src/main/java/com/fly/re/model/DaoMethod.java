@@ -1,5 +1,7 @@
 package com.fly.re.model;
 
+import com.fly.jdbc.FlyUtil;
+
 /**
  * Dao层模板函数
  * @author kongyongshun
@@ -29,10 +31,12 @@ public class DaoMethod {
 			str += "\t@Override\r\n";
 		}
 		
-		str += "\tpublic " + returnType + " " + methodName + "(" + shapeCode + "){\r\n";	// 方法头
+		str += "\tpublic " + returnType + " " + methodName + "(" + shapeCode + ") {\r\n";	// 方法头
 		str += "\t\tString sql = \"" + sqlCode + "\";\r\n";		// sql
-		str += "\t\tObject[] args = {" + argsCode + "};\r\n";		// 参数
-		str += "\t\treturn " + returnCode + ";\r\n";		// 参数
+		if(FlyUtil.isNull(argsCode) == false) {
+			str += "\t\tObject[] args = {" + argsCode + "};\r\n";		// 参数
+		}
+		str += "\t\treturn " + returnCode + ";\r\n";		// 返回值 
 		
 		str += "\t}\r\n";
 		

@@ -5,36 +5,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.fly.re.model.CodeCfg;
+import com.fly.re.CodeCfg;
 import com.fly.re.model.Column;
-import com.fly.re.model.Table;
+import com.fly.re.model.MkTable;
 
 public class FlyReadMySql implements FlyRead{
 
 	// 配置信息
 	CodeCfg codeCfg;
-
 	public FlyRead setCodeCfg(CodeCfg codeCfg){
 		this.codeCfg = codeCfg;
 		return this;
 	}
 		
 
+	// 开始读取 
 	@Override
-	public CodeCfg readInfo() {
+	public void readInfo() {
 		Map<String, String> tcMap = ReadUtil.getTcMap(codeCfg.sqlFly);
-		for (Table table : codeCfg.tableList) {
-			table.comment = tcMap.get(table.name);	// 表注释
-			getColumnList(table);	// 加持字段信息
+		for (String tableName : codeCfg.tableNameList) {
+			MkTable table = new MkTable();
+			table.name = tableName;		// 表名字 
+			table.comment = tcMap.get(tableName);	// 表注释
+			getColumnList(table);	// 获取字段信息
+			codeCfg.tableList.add(table);	// 添加进集合 
 		}
-		return null;
 	}
 	
 	
 	
-	// 获取指定表的所有列信息
-	@Override
-	public List<Column> getColumnList(Table table){
+	// 获取指定表的所有列信息 
+	public void getColumnList(MkTable table){
 		List<Column> columns = new ArrayList<>();
 		try {
 			Map<String, String> jtMap = ReadUtil.getJtMap(codeCfg.sqlFly, table.name);
@@ -52,7 +53,6 @@ public class FlyReadMySql implements FlyRead{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return columns;
 	}
 	
 
