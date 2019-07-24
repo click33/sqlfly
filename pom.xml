@@ -44,31 +44,7 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- AesUtil用到的包 -->
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-		</dependency>
-
-		<!-- Redis驱动 https://mvnrepository.com/artifact/redis.clients/jedis -->
-		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-		</dependency>
-
-		<!-- SpringBoot整合redis -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-redis</artifactId>
-			<version>RELEASE</version>
-		</dependency>
-
-
-		<!-- dom4j 解析XML -->
-		<dependency>
-			<groupId>dom4j</groupId>
-			<artifactId>dom4j</artifactId>
-		</dependency>
+		
 
 
 
