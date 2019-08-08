@@ -50,7 +50,7 @@ public class FlyDataSource implements DataSource {
 	private void loadDriver() {
 		try {
 			Class.forName(driverClassName);
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			throw new FlySysException("数据库驱动加载异常：" + driverClassName, e);
 		}
 	}

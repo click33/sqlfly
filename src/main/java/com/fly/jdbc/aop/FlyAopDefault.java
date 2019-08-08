@@ -17,11 +17,11 @@ public class FlyAopDefault implements FlyAop {
 
 	@Override
 	public void exeBefore(String sql, Object[] args) {
-		if (FlyObjects.getConfig().printSql) {
+		if (FlyObjects.getConfig().getPrintSql()) {
 			System.out.println("========== sql execut ==========");
-			System.out.print(FlyObjects.getConfig().sqlhh);
+			System.out.print(FlyObjects.getConfig().getSqlhh());
 			System.out.println(sql);
-			System.out.print(FlyObjects.getConfig().argshh);
+			System.out.print(FlyObjects.getConfig().getArgshh());
 			System.out.println(Arrays.asList(args));
 		}
 	}

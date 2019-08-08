@@ -29,7 +29,7 @@ public class FlyConfigFactory {
 		if(map == null){
 			throw new FlySysException("找不到配置文件：" + configPath, null);
 		}
-		return (FlyConfig)initPropByMap(map, FlyConfig.class);
+		return (FlyConfig)initPropByMap(map, new FlyConfig());
 	}
 	
 	

@@ -11,6 +11,20 @@ import com.fly.re.read.FlyRead;
 import com.fly.re.read.FlyReadMySql;
 import com.fly.re.read.ReadUtil;
 
+/**
+ * 代码生成工具类
+ * @author kong
+ * 例如：
+ * <p>
+ *	// 代码生成 	<br/>
+	CodeUtil.codeCfg 	<br/>
+		.setAuthor("shengzhang") 	<br/>
+		.setCodePath("src/main/java/") 	<br/>
+		.setPackagePath( "com.pj.x_project") 	<br/>
+		.setIs_three(false) 	<br/>
+		.setIs_lomock(true); 	<br/>
+		CodeUtil.run(); 	<br/>
+ */
 public class CodeUtil {
 	
 	

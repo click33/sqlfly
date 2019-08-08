@@ -17,11 +17,29 @@ import com.fly.jdbc.exception.FlySQLException;
 public class SqlFlyBase {
 
 	protected Connection connection; 	// 连接对象
-	private DataSource dataSource; 		// 连接池对象
+	protected DataSource dataSource; 	// 连接池对象
 	protected boolean isBegin = false; 	// 是否已经开始事务
-	public String sql;	 				// 上一条执行的SQL
-
+	protected String prevSql;	 		// 上一条执行的SQL
+	protected long id;					// 此SqlFly的id号 
 	
+
+	/* * * * * * * * * * * * * 基本 * * * * * * * * * * * * * * * * * * * * */
+	
+	public SqlFlyBase() {
+		id = FlyObjects.getSqlFlyId();
+	}
+	/**
+	 * 返回上一条执行的SQL
+	 */
+	public String getPrevSql() {
+		return prevSql;
+	}
+	/**
+	 * 返回此SqlFly的id号 
+	 */
+	public long getId() {
+		return id;
+	}
 	
 	
 	/* * * * * * * * * * * * * 连接池相关 * * * * * * * * * * * * * * * * * * * * */
@@ -200,6 +218,8 @@ public class SqlFlyBase {
 			throw new FlySQLException("事务结束失败: 设置连接autoCommit状态失败", e);
 		}
 	}
+
+	
 	
 	
 	

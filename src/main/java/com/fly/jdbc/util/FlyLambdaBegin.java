@@ -5,7 +5,7 @@ package com.fly.jdbc.util;
  * @author kong
  *
  */
-public interface FlyLambdaCode {
+public interface FlyLambdaBegin {
 
 	/**
 	 * 执行事务的方法 

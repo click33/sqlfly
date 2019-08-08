@@ -36,13 +36,13 @@ public class CodeCfg {
 
 	// 返回IO的主目录
 	public String getIOPath() {
-		String path = new File(projectPath + codePath, packagePath.replace(".", "\\")).getAbsolutePath() + "\\";
+		String path = new File(projectPath + "\\" + codePath, packagePath.replace(".", "\\")).getAbsolutePath() + "\\";
 		return path;
 	}
 
 	// 返回IO的主目录, 根据指定包名
 	public String getIOPath(String packageStr) {
-		String path = new File(projectPath + codePath, packageStr.replace(".", "\\")).getAbsolutePath() + "\\";
+		String path = new File(projectPath + "\\" + codePath, packageStr.replace(".", "\\")).getAbsolutePath() + "\\";
 		return path;
 	}
 	

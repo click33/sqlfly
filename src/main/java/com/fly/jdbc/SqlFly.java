@@ -10,7 +10,8 @@ import com.fly.jdbc.cfg.FlyObjects;
 import com.fly.jdbc.exception.FlySQLException;
 import com.fly.jdbc.paging.Page;
 import com.fly.jdbc.util.FlyDbUtil;
-import com.fly.jdbc.util.FlyLambdaCode;
+import com.fly.jdbc.util.FlyLambdaBegin;
+import com.fly.jdbc.util.FlyLambdaRollback;
 
 /**
  * Fly核心对象，JDBC的封装
@@ -25,7 +26,7 @@ public class SqlFly extends SqlFlyBase {
 	 * 执行任意类型sql，args为参数列表(其余函数同理)
 	 */
 	public PreparedStatement getExecute(String sql, Object... args) {
-		return FlyDbUtil.getExecute(getConnection(), this.sql = sql, args);
+		return FlyDbUtil.getExecute(getConnection(), this.prevSql = sql, args);
 	}
 
 	/**
@@ -117,7 +118,7 @@ public class SqlFly extends SqlFlyBase {
 	 */
 	public <T> List<T> getListPage(Page page, Class<T> cs, String sql, Object... args) {
 		if(page == null) {
-			page = new Page(1, FlyObjects.getConfig().defaultLimit);
+			page = new Page(1, FlyObjects.getConfig().getDefaultLimit());
 		}
 		if(page.getIs_count()) {
 			page.setCount(getCount(sql, args));
@@ -158,7 +159,7 @@ public class SqlFly extends SqlFlyBase {
 	/** 将结果集映射为--List< Map >集合 - 并分页 */
 	public List<Map<String, Object>> getMapListPage(Page page, String sql, Object... args) {
 		if(page == null) {
-			page = new Page(1, FlyObjects.getConfig().defaultLimit);
+			page = new Page(1, FlyObjects.getConfig().getDefaultLimit());
 		}
 		if(page.getIs_count()) {
 			page.setCount(getCount(sql, args));
@@ -245,17 +246,31 @@ public class SqlFly extends SqlFlyBase {
 	 * @param code lambda表达式
 	 * @return 
 	 */
-	public SqlFly begin(FlyLambdaCode code) {
-		try {
-			beginTransaction();
-			code.run();
-			commit();
-		} catch (Exception e) {
-			rollback();
-		}
+	public SqlFly begin(FlyLambdaBegin code) {
+		beginTransaction();
+		code.run();
+		commit();
 		return this;
 	}
 	
+	/**
+	 * 已lambda方式开始事务
+	 * @param code lambda表达式
+	 * @return 
+	 */
+	public SqlFly begin(FlyLambdaBegin begin, FlyLambdaRollback rollback) {
+		try {
+			beginTransaction();
+			begin.run();
+			commit();
+		} catch (Exception e) {
+			rollback();
+			if(rollback != null) {
+				rollback.run(e);
+			}
+		}
+		return this;
+	}
 	
 	
 }

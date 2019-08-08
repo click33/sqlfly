@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fly.jdbc.cfg.FlyConsts;
+import com.fly.jdbc.paging.Page;
 
 
 /**
@@ -105,29 +106,28 @@ public class FlyUtil {
 	
 	
 	/** 返回分页后的集合，内存分页 */
-//	@SuppressWarnings({ "rawtypes", "unchecked" })
-//	public static List getListPage(List list, Page page) {
-//		List newList = new ArrayList();
-//		if (page == null) {
-//			return newList;
-//		}
-//		int start = page.getStart(); // 开始数
-//		int pz = page.getPageSize(); // 页大小
-//		page.setCount(list.size());
-//		for (int i = start; i < start + pz; i++) {
-//			if (i >= list.size()) {
-//				break;
-//			}
-//			newList.add(list.get(i));
-//		}
-//		return newList;
-//	}
+	public static <T> List<T> getListPage(List<T> list, Page page) {
+		List<T> newList = new ArrayList<T>();
+		if (page == null) {
+			return newList;
+		}
+		int start = page.getStart(); // 开始数
+		int pz = page.getPageSize(); // 页大小
+		page.setCount(list.size());
+		for (int i = start; i < start + pz; i++) {
+			if (i >= list.size()) {
+				break;
+			}
+			newList.add(list.get(i));
+		}
+		return newList;
+	}
 	
 	
 	/**
 	 * 该字符串是否为null或者空串
 	 */
-	public static boolean isNull(Object str) {
+	public static boolean isNull(String str) {
 		return (str == null || str.equals(""));
 	}
 	
@@ -168,7 +168,9 @@ public class FlyUtil {
 		String b = "____ ____ _    ____ _    _   _ \n" + 
 				"[__  |  | |    |___ |     \\_/  \n" + 
 				"___] |_\\| |___ |    |___   |   \n" + 
-				"SqlFly     " + FlyConsts.V + "         \n";
+				"SqlFly：" + FlyConsts.V + "         \n" +
+				"GitHub：" + FlyConsts.github_url + "\n";
+		
 		String str = b;
 		System.out.println(str);
 	}

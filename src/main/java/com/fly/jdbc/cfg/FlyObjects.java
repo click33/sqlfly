@@ -28,7 +28,7 @@ public class FlyObjects {
 	}
 	public static void setConfig(FlyConfig config) {
 		FlyObjects.config = config;
-		if(config.isV) {
+		if(config.getIsV()) {
 			FlyUtil.printSqlFly();
 		}
 	}
@@ -86,10 +86,17 @@ public class FlyObjects {
 	public synchronized static void initDataSource() {
 		if(dataSource == null){
 			FlyConfig c = getConfig();
-			setDataSource(new FlyDataSource(c.driverClassName, c.url, c.username, c.password, c.ispool, c.init, c.min, c.max));
+			setDataSource(new FlyDataSource(c.getDriverClassName(), c.getUrl(), 
+					c.getUsername(), c.getPassword(), c.getIspool(), c.getInit(), c.getMin(), c.getMax()));
 		}
 	}
 	
+	
+	// SqlFly的id号 
+	private static long sqlfly_id = 0;
+	public static long getSqlFlyId() {
+		return sqlfly_id++;
+	}
 	
 	
 //	// 初始化框架

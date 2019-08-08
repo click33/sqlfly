@@ -15,7 +15,7 @@ public class Page implements Serializable{
     int start;      // 起始位置 
     int count = -1;      // 总数据数 
     int pageCount;  // 可以分的总页数 
-    boolean is_count = true;  // 是否加载总数, 不加载总数的情况下可以减少一次数据库请求 
+    Boolean is_count = true;  // 是否加载总数, 不加载总数的情况下可以减少一次数据库请求 
 
 
 
