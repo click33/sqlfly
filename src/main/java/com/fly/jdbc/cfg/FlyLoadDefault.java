@@ -10,7 +10,6 @@ public class FlyLoadDefault implements FlyLoad {
 	
 	@Override
 	public boolean loadBefore() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
@@ -21,7 +20,6 @@ public class FlyLoadDefault implements FlyLoad {
 
 	@Override
 	public boolean loadAfter() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 

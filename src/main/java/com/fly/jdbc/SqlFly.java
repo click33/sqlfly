@@ -11,7 +11,9 @@ import com.fly.jdbc.exception.FlySQLException;
 import com.fly.jdbc.paging.Page;
 import com.fly.jdbc.util.FlyDbUtil;
 import com.fly.jdbc.util.FlyLambdaBegin;
+import com.fly.jdbc.util.FlyLambdaBeginRT;
 import com.fly.jdbc.util.FlyLambdaRollback;
+import com.fly.jdbc.util.FlyLambdaRollbackRT;
 
 /**
  * Fly核心对象，JDBC的封装
@@ -242,23 +244,23 @@ public class SqlFly extends SqlFlyBase {
 	}
 	
 	/**
-	 * 已lambda方式开始事务
+	 * 以lambda方式开始事务
 	 * @param code lambda表达式
 	 * @return 
 	 */
-	public SqlFly begin(FlyLambdaBegin code) {
+	public void begin(FlyLambdaBegin code) {
 		beginTransaction();
 		code.run();
 		commit();
-		return this;
 	}
 	
 	/**
-	 * 已lambda方式开始事务
-	 * @param code lambda表达式
+	 * 以lambda方式开始事务
+	 * @param begin begin代码块
+	 * @param rollback rollback代码块
 	 * @return 
 	 */
-	public SqlFly begin(FlyLambdaBegin begin, FlyLambdaRollback rollback) {
+	public void begin(FlyLambdaBegin begin, FlyLambdaRollback rollback) {
 		try {
 			beginTransaction();
 			begin.run();
@@ -269,8 +271,39 @@ public class SqlFly extends SqlFlyBase {
 				rollback.run(e);
 			}
 		}
-		return this;
 	}
+	
+	
+	/**
+	 * 已lambda方式开启事务，并返回一个值 
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T beginRT(FlyLambdaBeginRT begin) {
+		beginTransaction();
+		Object return_obj =  begin.run();
+		commit();
+		return (T)return_obj;
+	}
+
+	/**
+	 * 已lambda方式开启事务，并返回一个值 
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T beginRT(FlyLambdaBeginRT begin, FlyLambdaRollbackRT rollback) {
+		Object return_obj = null;
+		try {
+			beginTransaction();
+			return_obj = begin.run();
+			commit();
+		} catch (Exception e) {
+			rollback();
+			if(rollback != null) {
+				return_obj = rollback.run(e);
+			}
+		}
+		return (T)return_obj;
+	}
+	
 	
 	
 }

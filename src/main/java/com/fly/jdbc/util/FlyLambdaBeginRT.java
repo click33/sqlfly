@@ -5,12 +5,13 @@ package com.fly.jdbc.util;
  * @author kong
  *
  */
-public interface FlyLambdaBegin {
+public interface FlyLambdaBeginRT {
+	
 
 	/**
 	 * 执行事务的方法 
 	 */
-	public void run();
+	public Object run();
 	
 	
 }
