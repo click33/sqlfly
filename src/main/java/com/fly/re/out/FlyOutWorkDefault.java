@@ -310,7 +310,7 @@ public class FlyOutWorkDefault implements FlyOutWork{
 		}
 
 		mc.attList.add("@RestController");
-		mc.attList.add("@RequestMapping(\"/" + OutUtil.wordFirstSmall(table.name) + "/\")");
+		mc.attList.add("@RequestMapping(\"/" + className + "/\")");
 		mc.importList.add("import org.springframework.web.bind.annotation.RestController;");
 		mc.importList.add("import org.springframework.web.bind.annotation.RequestMapping;");
 		

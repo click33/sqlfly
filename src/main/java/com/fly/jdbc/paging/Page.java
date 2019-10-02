@@ -31,7 +31,7 @@ public class Page implements Serializable{
         if (pageNo < 1) {
             pageNo = 1;
         }
-        if (pageSize < 1 || pageSize > 100) {
+        if (pageSize < 1 || pageSize > 10000) {
             pageSize = 10;
         }
         this.pageNo = pageNo;
