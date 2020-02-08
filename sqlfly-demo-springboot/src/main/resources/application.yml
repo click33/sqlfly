@@ -1,0 +1,19 @@
+spring: 
+    # SqlFly的配置 
+    sqlfly: 
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/sqlfly-demo?useUnicode=true&characterEncoding=utf-8
+        username: root
+        password: root123456 
+        # 是否启用内置连接池 
+        ispool: false
+        # 是否控制台打印日志 
+        printSql: true 
+        
+    # druid连接池相关配置
+    datasource: 
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/sqlfly-demo?useUnicode=true&characterEncoding=utf-8
+        username: root
+        password: root123456
