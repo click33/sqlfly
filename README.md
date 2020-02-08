@@ -3,6 +3,8 @@
 ## 介绍
 一个好用的Java语言orm框架，在线文档：[https://sqlfly.dev33.cn](https://sqlfly.dev33.cn)
 
+ :kissing_closed_eyes:  :kissing_closed_eyes:  :kissing_closed_eyes:  :innocent: :innocent: :innocent:    :stuck_out_tongue:  :stuck_out_tongue:  :stuck_out_tongue: :heart:  :heart:  :heart: 
+
 ## 特点
 1. 对内将`jdbc`繁琐步骤进行封装，并对外提供简洁好用的API 
 2. 自动将查询结果集映射到实体类中，可以让你完全脱离对`ResultSet`的操作，贴心省事
