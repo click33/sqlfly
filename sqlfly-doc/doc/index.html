@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 	<head>
 		<meta charset="UTF-8">
 		<title>SqlFly</title>
@@ -61,6 +61,7 @@
 		<nav>
 			<a href="/">首页</a>
 			<a href="/doc/">文档</a>
+			<a href="http://sa-app.dev33.cn/wall.html?name=sqlfly" target="_blank">需求墙</a>
 			<a href="/doc/#/more/update-log">更新日志</a>
 		</nav>
 		<div id="app">加载中...</div>
@@ -72,6 +73,7 @@
 				name: name, // 名字 
 				repo: 'https://github.com/click33/sqlfly', // github地址 
 				themeColor: '#06A3D7', // 主题颜色  
+				basePath: location.pathname.substr(0, location.pathname.lastIndexOf('/') + 1),	// 自动计算项目名字 
 				// basePath: '/sqlfly-doc/',		// 设置文件加载的父路径, 这在一些带项目名部署的文件中非常有效
 				// basePath: '/sqlfly-doc/index.html',
 				auto2top: true, // 是否在切换页面后回到顶部 
