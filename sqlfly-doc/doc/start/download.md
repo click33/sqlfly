@@ -5,7 +5,7 @@
 ## 源码
 你可以通过`github`或者`gitee`来获取源码
 - github地址：[https://github.com/click33/sqlfly](https://github.com/click33/sqlfly)
-- gitee地址：[https://gitee.com/sz6/sqlfly](https://gitee.com/sz6/sqlfly)
+- gitee地址：[https://gitee.com/click33/sqlfly](https://gitee.com/click33/sqlfly)
 - 开源不易，求鼓励，给个star吧
 - 源码目录介绍
 	- sqlfly-dev: 源码

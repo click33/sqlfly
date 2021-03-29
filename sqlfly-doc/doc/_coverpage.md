@@ -14,6 +14,6 @@
 - 可方便的与Spring等第三方框架结合
 
 [GitHub](https://github.com/click33/sqlfly)
-[码云](https://gitee.com/sz6/SqlFly)
+[码云](https://gitee.com/click33/SqlFly)
 [快速开始](#介绍)
 
