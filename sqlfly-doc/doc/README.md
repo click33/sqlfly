@@ -1,7 +1,9 @@
 # SqlFly
 
 ## 介绍
-一个好用的Java语言orm框架，在线文档：[https://sqlfly.dev33.cn](https://sqlfly.dev33.cn)
+一个好用的Java语言orm框架，在线文档：[http://sqlfly.dev33.cn](http://sqlfly.dev33.cn)
+
+ :kissing_closed_eyes:  :kissing_closed_eyes:  :kissing_closed_eyes:  :innocent: :innocent: :innocent:    :stuck_out_tongue:  :stuck_out_tongue:  :stuck_out_tongue: :heart:  :heart:  :heart: 
 
 ## 特点
 1. 对内将`jdbc`繁琐步骤进行封装，并对外提供简洁好用的API 
